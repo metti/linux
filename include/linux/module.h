@@ -284,6 +284,12 @@ void *__symbol_get(const char *symbol);
 void *__symbol_get_gpl(const char *symbol);
 #define symbol_get(x) ((typeof(&x))(__symbol_get(__stringify(x))))
 
+/* namespace dependencies of the module */
+struct module_ns_dep {
+	struct list_head ns_dep;
+	const char *namespace;
+};
+
 /* modules using other modules: kdb wants to see this. */
 struct module_use {
 	struct list_head source_list;
@@ -374,6 +380,13 @@ struct module {
 	unsigned int num_gpl_syms;
 	const struct kernel_symbol *gpl_syms;
 	const s32 *gpl_crcs;
+
+	/* Namespace imports */
+	unsigned int num_ns_imports;
+	const struct namespace_import *ns_imports;
+
+	/* Namespace dependencies */
+	struct list_head ns_dependencies;
 
 #ifdef CONFIG_UNUSED_SYMBOLS
 	/* unused exported symbols. */

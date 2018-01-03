@@ -547,6 +547,15 @@ static const char *kernel_symbol_name(const struct kernel_symbol *sym)
 #endif
 }
 
+static const char *kernel_symbol_ns(const struct kernel_symbol *sym)
+{
+#ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
+	return offset_to_ptr(&sym->namespace_offset);
+#else
+	return sym->namespace;
+#endif
+}
+
 static int cmp_name(const void *va, const void *vb)
 {
 	const char *a;
@@ -1167,6 +1176,51 @@ static inline int module_unload_init(struct module *mod)
 }
 #endif /* CONFIG_MODULE_UNLOAD */
 
+static bool module_has_ns_dependency(struct module *mod, const char *ns)
+{
+	struct module_ns_dep *ns_dep;
+
+	list_for_each_entry(ns_dep, &mod->ns_dependencies, ns_dep) {
+		if (strcmp(ns_dep->namespace, ns) == 0)
+			return true;
+	}
+
+	return false;
+}
+
+static int add_module_ns_dependency(struct module *mod, const char *ns)
+{
+	struct module_ns_dep *ns_dep;
+
+	if (module_has_ns_dependency(mod, ns))
+		return 0;
+
+	ns_dep = kmalloc(sizeof(*ns_dep), GFP_ATOMIC);
+	if (!ns_dep)
+		return -ENOMEM;
+
+	ns_dep->namespace = ns;
+
+	list_add(&ns_dep->ns_dep, &mod->ns_dependencies);
+
+	return 0;
+}
+
+static bool module_imports_ns(struct module *mod, const char *ns)
+{
+	size_t i;
+
+	if (!ns)
+		return true;
+
+	for (i = 0; i < mod->num_ns_imports; ++i) {
+		if (!strcmp(mod->ns_imports[i].namespace, ns))
+			return true;
+	}
+
+	return false;
+}
+
 static size_t module_flags_taint(struct module *mod, char *buf)
 {
 	size_t l = 0;
@@ -1414,6 +1468,18 @@ static const struct kernel_symbol *resolve_symbol(struct module *mod,
 	if (err) {
 		sym = ERR_PTR(err);
 		goto getname;
+	}
+
+	/*
+	 * We can't yet verify that the module actually imports this
+	 * namespace, because the imports themselves are only available
+	 * after processing the symbol table and doing relocation; so
+	 * instead just record the dependency and check later.
+	 */
+	if (kernel_symbol_ns(sym)) {
+		err = add_module_ns_dependency(mod, kernel_symbol_ns(sym));
+		if (err)
+			sym = ERR_PTR(err);
 	}
 
 getname:
@@ -3055,6 +3121,11 @@ static int find_module_sections(struct module *mod, struct load_info *info)
 				     sizeof(*mod->gpl_syms),
 				     &mod->num_gpl_syms);
 	mod->gpl_crcs = section_addr(info, "__kcrctab_gpl");
+
+	mod->ns_imports = section_objs(info, "__knsimport",
+				       sizeof(*mod->ns_imports),
+				       &mod->num_ns_imports);
+
 	mod->gpl_future_syms = section_objs(info,
 					    "__ksymtab_gpl_future",
 					    sizeof(*mod->gpl_future_syms),
@@ -3381,6 +3452,19 @@ static int post_relocation(struct module *mod, const struct load_info *info)
 	return module_finalize(info->hdr, info->sechdrs, mod);
 }
 
+static void verify_namespace_dependencies(struct module *mod)
+{
+	struct module_ns_dep *ns_dep;
+
+	list_for_each_entry(ns_dep, &mod->ns_dependencies, ns_dep) {
+		if (!module_imports_ns(mod, ns_dep->namespace)) {
+			pr_warn("%s: module uses symbols from namespace %s,"
+				" but does not import it.\n",
+				mod->name, ns_dep->namespace);
+		}
+	}
+}
+
 /* Is this module of this name done loading?  No locks held. */
 static bool finished_loading(const char *name)
 {
@@ -3701,6 +3785,8 @@ static int load_module(struct load_info *info, const char __user *uargs,
 	if (err)
 		goto free_module;
 
+	INIT_LIST_HEAD(&mod->ns_dependencies);
+
 #ifdef CONFIG_MODULE_SIG
 	mod->sig_ok = info->sig_ok;
 	if (!mod->sig_ok) {
@@ -3748,6 +3834,8 @@ static int load_module(struct load_info *info, const char __user *uargs,
 	err = post_relocation(mod, info);
 	if (err < 0)
 		goto free_modinfo;
+
+	verify_namespace_dependencies(mod);
 
 	flush_module_icache(mod);
 
