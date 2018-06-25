@@ -38,6 +38,8 @@ static int sec_mismatch_count = 0;
 static int sec_mismatch_fatal = 0;
 /* ignore missing files */
 static int ignore_missing_files;
+/* Write namespace dependencies */
+static int write_ns_deps;
 
 enum export {
 	export_plain,      export_unused,     export_gpl,
@@ -2172,10 +2174,15 @@ static int check_exports(struct module *mod)
 		else
 			basename = mod->name;
 
-		if (exp->ns && !module_imports_namespace(mod, exp->ns)) {
-			warn("module %s uses symbol %s from namespace %s, "
-			     "but does not import it.\n",
-			     basename, exp->name, exp->ns);
+		if (exp->ns) {
+			add_namespace(&mod->required_namespaces, exp->ns);
+
+			if (!write_ns_deps &&
+			    !module_imports_namespace(mod, exp->ns)) {
+				warn("module %s uses symbol %s from namespace "
+				     "%s, but does not import it.\n",
+				     basename, exp->name, exp->ns);
+			}
 		}
 
 		if (!mod->gpl_compatible)
@@ -2472,6 +2479,38 @@ static void write_dump(const char *fname)
 	free(buf.p);
 }
 
+static void write_ns_deps_files(void)
+{
+	struct module *mod;
+	struct namespace_list *ns;
+	struct buffer ns_deps_buf = { };
+
+	for (mod = modules; mod; mod = mod->next) {
+		char fname[PATH_MAX];
+		const char *basename;
+
+		if (mod->skip)
+			continue;
+
+		ns_deps_buf.pos = 0;
+
+		for (ns = mod->required_namespaces; ns; ns = ns->next)
+			buf_printf(&ns_deps_buf, "%s\n", ns->namespace);
+
+		if (ns_deps_buf.pos == 0)
+			continue;
+
+		basename = strrchr(mod->name, '/');
+		if (basename)
+			basename++;
+		else
+			basename = mod->name;
+
+		sprintf(fname, ".tmp_versions/%s.ns_deps", basename);
+		write_if_changed(&ns_deps_buf, fname);
+	}
+}
+
 struct ext_sym_list {
 	struct ext_sym_list *next;
 	const char *file;
@@ -2488,7 +2527,7 @@ int main(int argc, char **argv)
 	struct ext_sym_list *extsym_iter;
 	struct ext_sym_list *extsym_start = NULL;
 
-	while ((opt = getopt(argc, argv, "i:I:e:mnsT:o:awE")) != -1) {
+	while ((opt = getopt(argc, argv, "i:I:e:mnsT:o:awEd")) != -1) {
 		switch (opt) {
 		case 'i':
 			kernel_read = optarg;
@@ -2529,6 +2568,9 @@ int main(int argc, char **argv)
 		case 'E':
 			sec_mismatch_fatal = 1;
 			break;
+		case 'd':
+			write_ns_deps = 1;
+			break;
 		default:
 			exit(1);
 		}
@@ -2550,6 +2592,12 @@ int main(int argc, char **argv)
 
 	if (files_source)
 		read_symbols_from_files(files_source);
+
+	if (write_ns_deps) {
+		/* Just write namespace dependencies and exit */
+		write_ns_deps_files();
+		return 0;
+	}
 
 	err = 0;
 
