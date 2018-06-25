@@ -164,6 +164,7 @@ struct symbol {
 	struct module *module;
 	unsigned int crc;
 	int crc_valid;
+	const char *ns; /* namespace */
 	unsigned int weak:1;
 	unsigned int vmlinux:1;    /* 1 if symbol is defined in vmlinux */
 	unsigned int kernel:1;     /* 1 if symbol is from kernel
@@ -231,6 +232,35 @@ static struct symbol *find_symbol(const char *name)
 			return s;
 	}
 	return NULL;
+}
+
+static bool contains_namespace(struct namespace_list *list, const char *ns)
+{
+	struct namespace_list *ns_entry;
+
+	for (ns_entry = list; ns_entry != NULL; ns_entry = ns_entry->next) {
+		if (strcmp(ns_entry->namespace, ns) == 0)
+			return true;
+	}
+
+	return false;
+}
+
+static void add_namespace(struct namespace_list **list, const char *ns)
+{
+	struct namespace_list *ns_entry;
+
+	if (!contains_namespace(*list, ns)) {
+		ns_entry = NOFAIL(malloc(sizeof(struct namespace_list)));
+		strcpy(ns_entry->namespace, ns);
+		ns_entry->next = *list;
+		*list = ns_entry;
+	}
+}
+
+static bool module_imports_namespace(struct module *module, const char *ns)
+{
+	return contains_namespace(module->imported_namespaces, ns);
 }
 
 static const struct {
@@ -312,21 +342,40 @@ static enum export export_from_sec(struct elf_info *elf, unsigned int sec)
 		return export_unknown;
 }
 
+static const char *sym_extract_ns(const char **symname)
+{
+	size_t n;
+
+	n = strcspn(*symname, ".");
+	if (n < strlen(*symname) - 1) {
+		char *dupsymname = NOFAIL(strdup(*symname));
+
+		dupsymname[n] = '\0';
+		*symname = dupsymname;
+		return dupsymname + n + 1;
+	} else {
+		return NULL;
+	}
+}
+
 /**
  * Add an exported symbol - it may have already been added without a
  * CRC, in this case just update the CRC
  **/
-static struct symbol *sym_add_exported(const char *name, struct module *mod,
-				       enum export export)
+static struct symbol *sym_add_exported(const char *name,
+				       struct module *mod, enum export export)
 {
-	struct symbol *s = find_symbol(name);
+	const char *extract_name = name;
+	const char *ns = sym_extract_ns(&extract_name);
+	struct symbol *s = find_symbol(extract_name);
 
 	if (!s) {
-		s = new_symbol(name, mod, export);
+		s = new_symbol(extract_name, mod, export);
+		s->ns = ns;
 	} else {
 		if (!s->preloaded) {
 			warn("%s: '%s' exported twice. Previous export "
-			     "was in %s%s\n", mod->name, name,
+			     "was in %s%s\n", mod->name, extract_name,
 			     s->module->name,
 			     is_vmlinux(s->module->name) ?"":".ko");
 		} else {
@@ -696,6 +745,10 @@ static void handle_modversions(struct module *mod, struct elf_info *info,
 		}
 		if (strcmp(symname, "init_module") == 0)
 			mod->has_init = 1;
+		if (strstarts(symname, "__knsimport_")) {
+			const char *name = symname + strlen("__knsimport_");
+			add_namespace(&mod->imported_namespaces, name);
+		}
 		if (strcmp(symname, "cleanup_module") == 0)
 			mod->has_cleanup = 1;
 		break;
@@ -2118,6 +2171,13 @@ static int check_exports(struct module *mod)
 			basename++;
 		else
 			basename = mod->name;
+
+		if (exp->ns && !module_imports_namespace(mod, exp->ns)) {
+			warn("module %s uses symbol %s from namespace %s, "
+			     "but does not import it.\n",
+			     basename, exp->name, exp->ns);
+		}
+
 		if (!mod->gpl_compatible)
 			check_for_gpl_usage(exp->export, basename, exp->name);
 		check_for_unused(exp->export, basename, exp->name);
