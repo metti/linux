@@ -664,7 +664,7 @@ void usb_stor_host_template_init(struct scsi_host_template *sht,
 	sht->proc_name = name;
 	sht->module = owner;
 }
-EXPORT_SYMBOL_GPL(usb_stor_host_template_init);
+EXPORT_SYMBOL_NS(usb_stor_host_template_init, USB_STORAGE);
 
 /* To Report "Illegal Request: Invalid Field in CDB */
 unsigned char usb_stor_sense_invalidCDB[18] = {
@@ -673,4 +673,4 @@ unsigned char usb_stor_sense_invalidCDB[18] = {
 	[7]	= 0x0a,			    /* additional length */
 	[12]	= 0x24			    /* Invalid Field in CDB */
 };
-EXPORT_SYMBOL_GPL(usb_stor_sense_invalidCDB);
+EXPORT_SYMBOL_NS(usb_stor_sense_invalidCDB, USB_STORAGE);
