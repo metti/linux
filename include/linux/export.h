@@ -66,9 +66,10 @@ struct namespace_import {
 	__ADDRESSABLE(sym)						\
 	asm("	.section \"___ksymtab" sec "+" #sym "\", \"a\"	\n"	\
 	    "	.balign	8					\n"	\
-	    "__ksymtab_" #sym ":				\n"	\
+	    "__ksymtab_" #sym nspost2 ":				\n"	\
 	    "	.long	" #sym "- .				\n"	\
-	    "	.long	__kstrtab_" #sym "- .			\n"	\
+	    "	.long	__kstrtab_" #sym #nspost "- .			\n"	\
+	    "	.long	__kstrtab_" #sym #nspost "- .			\n"	\
 	    "	.previous					\n")
 
 struct kernel_symbol {
@@ -82,7 +83,7 @@ struct kernel_symbol {
     asm("__ksymtab_" #sym nspost2)
 	__attribute__((section("___ksymtab" sec "+" #sym), used))	\
 	__attribute__((aligned(sizeof(void *))))                        \
-	= { (unsigned long)&sym, __kstrtab_##sym, ns }
+	= { (unsigned long)&sym, __kstrtab_##sym##nspost, ns }
 
 struct kernel_symbol {
 	unsigned long value;
