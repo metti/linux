@@ -375,4 +375,5 @@ module_platform_driver(omap_wdt_driver);
 
 MODULE_AUTHOR("George G. Davis");
 MODULE_LICENSE("GPL");
+MODULE_IMPORT_NS(WATCHDOG_CORE);
 MODULE_ALIAS("platform:omap_wdt");

@@ -416,3 +416,4 @@ module_platform_driver_probe(at91wdt_driver, at91wdt_probe);
 MODULE_AUTHOR("Renaud CERRATO <r.cerrato@til-technologies.fr>");
 MODULE_DESCRIPTION("Watchdog driver for Atmel AT91SAM9x processors");
 MODULE_LICENSE("GPL");
+MODULE_IMPORT_NS(WATCHDOG_CORE);

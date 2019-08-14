@@ -248,3 +248,4 @@ module_platform_driver(npcm_wdt_driver);
 MODULE_AUTHOR("Joel Stanley");
 MODULE_DESCRIPTION("Watchdog driver for NPCM");
 MODULE_LICENSE("GPL v2");
+MODULE_IMPORT_NS(WATCHDOG_CORE);

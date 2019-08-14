@@ -550,3 +550,4 @@ module_platform_driver(kempld_wdt_driver);
 MODULE_DESCRIPTION("KEM PLD Watchdog Driver");
 MODULE_AUTHOR("Michael Brunner <michael.brunner@kontron.com>");
 MODULE_LICENSE("GPL");
+MODULE_IMPORT_NS(WATCHDOG_CORE);

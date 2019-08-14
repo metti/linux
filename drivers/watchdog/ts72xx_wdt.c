@@ -174,4 +174,5 @@ module_platform_driver(ts72xx_wdt_driver);
 MODULE_AUTHOR("Mika Westerberg <mika.westerberg@iki.fi>");
 MODULE_DESCRIPTION("TS-72xx SBC Watchdog");
 MODULE_LICENSE("GPL");
+MODULE_IMPORT_NS(WATCHDOG_CORE);
 MODULE_ALIAS("platform:ts72xx-wdt");

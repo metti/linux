@@ -175,4 +175,5 @@ module_platform_driver(wm8350_wdt_driver);
 MODULE_AUTHOR("Mark Brown");
 MODULE_DESCRIPTION("WM8350 Watchdog");
 MODULE_LICENSE("GPL");
+MODULE_IMPORT_NS(WATCHDOG_CORE);
 MODULE_ALIAS("platform:wm8350-wdt");

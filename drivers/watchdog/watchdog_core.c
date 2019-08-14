@@ -145,7 +145,7 @@ int watchdog_init_timeout(struct watchdog_device *wdd,
 
 	return ret;
 }
-EXPORT_SYMBOL_GPL(watchdog_init_timeout);
+EXPORT_SYMBOL_NS_GPL(watchdog_init_timeout, WATCHDOG_CORE);
 
 static int watchdog_restart_notifier(struct notifier_block *nb,
 				     unsigned long action, void *data)
@@ -180,7 +180,7 @@ void watchdog_set_restart_priority(struct watchdog_device *wdd, int priority)
 {
 	wdd->restart_nb.priority = priority;
 }
-EXPORT_SYMBOL_GPL(watchdog_set_restart_priority);
+EXPORT_SYMBOL_NS_GPL(watchdog_set_restart_priority, WATCHDOG_CORE);
 
 static int __watchdog_register_device(struct watchdog_device *wdd)
 {
@@ -279,7 +279,7 @@ int watchdog_register_device(struct watchdog_device *wdd)
 
 	return ret;
 }
-EXPORT_SYMBOL_GPL(watchdog_register_device);
+EXPORT_SYMBOL_NS_GPL(watchdog_register_device, WATCHDOG_CORE);
 
 static void __watchdog_unregister_device(struct watchdog_device *wdd)
 {
@@ -311,7 +311,7 @@ void watchdog_unregister_device(struct watchdog_device *wdd)
 	mutex_unlock(&wtd_deferred_reg_mutex);
 }
 
-EXPORT_SYMBOL_GPL(watchdog_unregister_device);
+EXPORT_SYMBOL_NS_GPL(watchdog_unregister_device, WATCHDOG_CORE);
 
 static void devm_watchdog_unregister_device(struct device *dev, void *res)
 {
@@ -348,7 +348,7 @@ int devm_watchdog_register_device(struct device *dev,
 
 	return ret;
 }
-EXPORT_SYMBOL_GPL(devm_watchdog_register_device);
+EXPORT_SYMBOL_NS_GPL(devm_watchdog_register_device, WATCHDOG_CORE);
 
 static int __init watchdog_deferred_registration(void)
 {

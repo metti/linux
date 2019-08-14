@@ -210,3 +210,4 @@ module_platform_driver(pm8916_wdt_driver);
 MODULE_AUTHOR("Loic Poulain <loic.poulain@linaro.org>");
 MODULE_DESCRIPTION("Qualcomm pm8916 watchdog driver");
 MODULE_LICENSE("GPL v2");
+MODULE_IMPORT_NS(WATCHDOG_CORE);

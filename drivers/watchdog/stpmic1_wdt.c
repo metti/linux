@@ -138,3 +138,4 @@ module_platform_driver(stpmic1_wdt_driver);
 MODULE_DESCRIPTION("Watchdog driver for STPMIC1 device");
 MODULE_AUTHOR("Pascal Paillet <p.paillet@st.com>");
 MODULE_LICENSE("GPL v2");
+MODULE_IMPORT_NS(WATCHDOG_CORE);

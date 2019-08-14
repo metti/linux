@@ -316,3 +316,4 @@ module_platform_driver(lpc18xx_wdt_driver);
 MODULE_AUTHOR("Ariel D'Alessandro <ariel@vanguardiasur.com.ar>");
 MODULE_DESCRIPTION("NXP LPC18xx Watchdog Timer Driver");
 MODULE_LICENSE("GPL v2");
+MODULE_IMPORT_NS(WATCHDOG_CORE);

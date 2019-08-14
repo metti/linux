@@ -486,3 +486,4 @@ module_exit(sp5100_tco_exit);
 MODULE_AUTHOR("Priyanka Gupta");
 MODULE_DESCRIPTION("TCO timer driver for SP5100/SB800 chipset");
 MODULE_LICENSE("GPL");
+MODULE_IMPORT_NS(WATCHDOG_CORE);

@@ -139,4 +139,5 @@ module_exit(ebc_c384_wdt_exit);
 MODULE_AUTHOR("William Breathitt Gray <vilhelm.gray@gmail.com>");
 MODULE_DESCRIPTION("WinSystems EBC-C384 watchdog timer driver");
 MODULE_LICENSE("GPL v2");
+MODULE_IMPORT_NS(WATCHDOG_CORE);
 MODULE_ALIAS("isa:" MODULE_NAME);

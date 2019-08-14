@@ -370,4 +370,5 @@ MODULE_AUTHOR("Marek Behun <marek.behun@nic.cz>");
 MODULE_DESCRIPTION("Armada 37xx CPU Watchdog");
 
 MODULE_LICENSE("GPL v2");
+MODULE_IMPORT_NS(WATCHDOG_CORE);
 MODULE_ALIAS("platform:armada_37xx_wdt");

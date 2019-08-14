@@ -167,4 +167,5 @@ module_mcb_driver(men_z069_driver);
 
 MODULE_AUTHOR("Johannes Thumshirn <jth@kernel.org>");
 MODULE_LICENSE("GPL v2");
+MODULE_IMPORT_NS(WATCHDOG_CORE);
 MODULE_ALIAS("mcb:16z069");

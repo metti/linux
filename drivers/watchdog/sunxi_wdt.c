@@ -289,6 +289,7 @@ MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started "
 		"(default=" __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
 
 MODULE_LICENSE("GPL");
+MODULE_IMPORT_NS(WATCHDOG_CORE);
 MODULE_AUTHOR("Carlo Caione <carlo.caione@gmail.com>");
 MODULE_AUTHOR("Henrik Nordstrom <henrik@henriknordstrom.net>");
 MODULE_DESCRIPTION("sunxi WatchDog Timer Driver");

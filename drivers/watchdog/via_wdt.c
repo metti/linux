@@ -259,3 +259,4 @@ module_pci_driver(wdt_driver);
 MODULE_AUTHOR("Marc Vertes");
 MODULE_DESCRIPTION("Driver for watchdog timer on VIA chipset");
 MODULE_LICENSE("GPL");
+MODULE_IMPORT_NS(WATCHDOG_CORE);

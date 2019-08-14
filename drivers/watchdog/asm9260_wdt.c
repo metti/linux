@@ -374,3 +374,4 @@ module_platform_driver(asm9260_wdt_driver);
 MODULE_DESCRIPTION("asm9260 WatchDog Timer Driver");
 MODULE_AUTHOR("Oleksij Rempel <linux@rempel-privat.de>");
 MODULE_LICENSE("GPL");
+MODULE_IMPORT_NS(WATCHDOG_CORE);

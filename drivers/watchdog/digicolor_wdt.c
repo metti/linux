@@ -161,3 +161,4 @@ module_platform_driver(dc_wdt_driver);
 MODULE_AUTHOR("Baruch Siach <baruch@tkos.co.il>");
 MODULE_DESCRIPTION("Driver for Conexant Digicolor watchdog timer");
 MODULE_LICENSE("GPL");
+MODULE_IMPORT_NS(WATCHDOG_CORE);

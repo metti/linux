@@ -218,4 +218,5 @@ module_platform_driver(atlas7_wdt_driver);
 MODULE_DESCRIPTION("CSRatlas7 watchdog driver");
 MODULE_AUTHOR("Guo Zeng <Guo.Zeng@csr.com>");
 MODULE_LICENSE("GPL v2");
+MODULE_IMPORT_NS(WATCHDOG_CORE);
 MODULE_ALIAS("platform:atlas7-wdt");
