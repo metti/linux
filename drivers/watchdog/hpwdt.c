@@ -386,6 +386,7 @@ static struct pci_driver hpwdt_driver = {
 MODULE_AUTHOR("Tom Mingarelli");
 MODULE_DESCRIPTION("hpe watchdog driver");
 MODULE_LICENSE("GPL");
+MODULE_IMPORT_NS(WATCHDOG_CORE);
 MODULE_VERSION(HPWDT_VERSION);
 
 module_param(soft_margin, int, 0);

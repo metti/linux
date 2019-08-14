@@ -571,6 +571,7 @@ static void __exit sch56xx_exit(void)
 MODULE_DESCRIPTION("SMSC SCH56xx Hardware Monitoring Common Code");
 MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
 MODULE_LICENSE("GPL");
+MODULE_IMPORT_NS(WATCHDOG_CORE);
 
 module_init(sch56xx_init);
 module_exit(sch56xx_exit);

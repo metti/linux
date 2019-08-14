@@ -207,3 +207,4 @@ module_platform_driver(tangox_wdt_driver);
 MODULE_AUTHOR("Mans Rullgard <mans@mansr.com>");
 MODULE_DESCRIPTION("SMP86xx/SMP87xx Watchdog driver");
 MODULE_LICENSE("GPL");
+MODULE_IMPORT_NS(WATCHDOG_CORE);

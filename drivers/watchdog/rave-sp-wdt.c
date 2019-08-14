@@ -329,6 +329,7 @@ module_platform_driver(rave_sp_wdt_driver);
 
 MODULE_DEVICE_TABLE(of, rave_sp_wdt_of_match);
 MODULE_LICENSE("GPL");
+MODULE_IMPORT_NS(WATCHDOG_CORE);
 MODULE_AUTHOR("Andrey Vostrikov <andrey.vostrikov@cogentembedded.com>");
 MODULE_AUTHOR("Nikita Yushchenko <nikita.yoush@cogentembedded.com>");
 MODULE_AUTHOR("Andrey Smirnov <andrew.smirnov@gmail.com>");

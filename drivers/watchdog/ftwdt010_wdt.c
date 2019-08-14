@@ -227,3 +227,4 @@ module_platform_driver(ftwdt010_wdt_driver);
 MODULE_AUTHOR("Linus Walleij");
 MODULE_DESCRIPTION("Watchdog driver for Faraday Technology FTWDT010");
 MODULE_LICENSE("GPL");
+MODULE_IMPORT_NS(WATCHDOG_CORE);

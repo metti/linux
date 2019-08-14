@@ -339,3 +339,4 @@ MODULE_ALIAS("platform:" BCM_KONA_WDT_NAME);
 MODULE_AUTHOR("Markus Mayer <mmayer@broadcom.com>");
 MODULE_DESCRIPTION("Broadcom Kona Watchdog Driver");
 MODULE_LICENSE("GPL v2");
+MODULE_IMPORT_NS(WATCHDOG_CORE);

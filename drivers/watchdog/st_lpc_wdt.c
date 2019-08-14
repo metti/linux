@@ -305,3 +305,4 @@ module_platform_driver(st_wdog_driver);
 MODULE_AUTHOR("David Paris <david.paris@st.com>");
 MODULE_DESCRIPTION("ST LPC Watchdog Driver");
 MODULE_LICENSE("GPL");
+MODULE_IMPORT_NS(WATCHDOG_CORE);

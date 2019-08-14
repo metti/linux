@@ -282,4 +282,5 @@ module_platform_driver(wm831x_wdt_driver);
 MODULE_AUTHOR("Mark Brown");
 MODULE_DESCRIPTION("WM831x Watchdog");
 MODULE_LICENSE("GPL");
+MODULE_IMPORT_NS(WATCHDOG_CORE);
 MODULE_ALIAS("platform:wm831x-watchdog");

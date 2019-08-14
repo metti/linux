@@ -245,3 +245,4 @@ module_platform_driver(rza_wdt_driver);
 MODULE_DESCRIPTION("Renesas RZ/A WDT Driver");
 MODULE_AUTHOR("Chris Brandt <chris.brandt@renesas.com>");
 MODULE_LICENSE("GPL v2");
+MODULE_IMPORT_NS(WATCHDOG_CORE);

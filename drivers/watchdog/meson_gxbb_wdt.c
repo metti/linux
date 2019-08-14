@@ -204,3 +204,4 @@ module_platform_driver(meson_gxbb_wdt_driver);
 MODULE_AUTHOR("Neil Armstrong <narmstrong@baylibre.com>");
 MODULE_DESCRIPTION("Amlogic Meson GXBB Watchdog timer driver");
 MODULE_LICENSE("Dual BSD/GPL");
+MODULE_IMPORT_NS(WATCHDOG_CORE);

@@ -315,4 +315,5 @@ module_platform_driver(rwdt_driver);
 
 MODULE_DESCRIPTION("Renesas WDT Watchdog Driver");
 MODULE_LICENSE("GPL v2");
+MODULE_IMPORT_NS(WATCHDOG_CORE);
 MODULE_AUTHOR("Wolfram Sang <wsa@sang-engineering.com>");

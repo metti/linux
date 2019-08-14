@@ -124,3 +124,4 @@ MODULE_AUTHOR("Andrew Lunn <andrew@lunn.ch>");
 MODULE_DESCRIPTION("TQMx86 Watchdog");
 MODULE_ALIAS("platform:tqmx86-wdt");
 MODULE_LICENSE("GPL");
+MODULE_IMPORT_NS(WATCHDOG_CORE);

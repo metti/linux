@@ -321,3 +321,4 @@ module_platform_driver(sama5d4_wdt_driver);
 MODULE_AUTHOR("Atmel Corporation");
 MODULE_DESCRIPTION("Atmel SAMA5D4 Watchdog Timer driver");
 MODULE_LICENSE("GPL v2");
+MODULE_IMPORT_NS(WATCHDOG_CORE);

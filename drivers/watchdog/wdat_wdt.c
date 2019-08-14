@@ -523,4 +523,5 @@ module_platform_driver(wdat_wdt_driver);
 MODULE_AUTHOR("Mika Westerberg <mika.westerberg@linux.intel.com>");
 MODULE_DESCRIPTION("ACPI Hardware Watchdog (WDAT) driver");
 MODULE_LICENSE("GPL v2");
+MODULE_IMPORT_NS(WATCHDOG_CORE);
 MODULE_ALIAS("platform:wdat_wdt");

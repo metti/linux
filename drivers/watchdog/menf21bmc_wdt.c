@@ -181,4 +181,5 @@ module_platform_driver(menf21bmc_wdt);
 MODULE_DESCRIPTION("MEN 14F021P00 BMC Watchdog driver");
 MODULE_AUTHOR("Andreas Werner <andreas.werner@men.de>");
 MODULE_LICENSE("GPL v2");
+MODULE_IMPORT_NS(WATCHDOG_CORE);
 MODULE_ALIAS("platform:menf21bmc_wdt");

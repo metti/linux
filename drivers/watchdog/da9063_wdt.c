@@ -239,4 +239,5 @@ module_platform_driver(da9063_wdt_driver);
 MODULE_AUTHOR("Mariusz Wojtasik <mariusz.wojtasik@diasemi.com>");
 MODULE_DESCRIPTION("Watchdog driver for Dialog DA9063");
 MODULE_LICENSE("GPL");
+MODULE_IMPORT_NS(WATCHDOG_CORE);
 MODULE_ALIAS("platform:" DA9063_DRVNAME_WATCHDOG);

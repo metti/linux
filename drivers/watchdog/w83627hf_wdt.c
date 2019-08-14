@@ -528,5 +528,6 @@ module_init(wdt_init);
 module_exit(wdt_exit);
 
 MODULE_LICENSE("GPL");
+MODULE_IMPORT_NS(WATCHDOG_CORE);
 MODULE_AUTHOR("Pádraig  Brady <P@draigBrady.com>");
 MODULE_DESCRIPTION("w83627hf/thf WDT driver");

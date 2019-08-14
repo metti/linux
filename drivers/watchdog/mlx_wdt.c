@@ -287,4 +287,5 @@ module_platform_driver(mlxreg_wdt_driver);
 MODULE_AUTHOR("Michael Shych <michaelsh@mellanox.com>");
 MODULE_DESCRIPTION("Mellanox watchdog driver");
 MODULE_LICENSE("GPL");
+MODULE_IMPORT_NS(WATCHDOG_CORE);
 MODULE_ALIAS("platform:mlx-wdt");

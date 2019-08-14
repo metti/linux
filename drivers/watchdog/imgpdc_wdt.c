@@ -314,3 +314,4 @@ MODULE_AUTHOR("Jude Abraham <Jude.Abraham@imgtec.com>");
 MODULE_AUTHOR("Naidu Tellapati <Naidu.Tellapati@imgtec.com>");
 MODULE_DESCRIPTION("Imagination Technologies PDC Watchdog Timer Driver");
 MODULE_LICENSE("GPL v2");
+MODULE_IMPORT_NS(WATCHDOG_CORE);

@@ -225,4 +225,5 @@ module_platform_driver(a21_wdt_driver);
 MODULE_AUTHOR("MEN Mikro Elektronik");
 MODULE_DESCRIPTION("MEN A21 Watchdog");
 MODULE_LICENSE("GPL");
+MODULE_IMPORT_NS(WATCHDOG_CORE);
 MODULE_ALIAS("platform:a21-watchdog");

@@ -751,3 +751,4 @@ module_i2c_driver(ziirave_wdt_driver);
 MODULE_AUTHOR("Martyn Welch <martyn.welch@collabora.co.uk");
 MODULE_DESCRIPTION("Zodiac Aerospace RAVE Switch Watchdog Processor Driver");
 MODULE_LICENSE("GPL");
+MODULE_IMPORT_NS(WATCHDOG_CORE);
