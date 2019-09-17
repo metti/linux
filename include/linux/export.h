@@ -18,11 +18,8 @@ extern struct module __this_module;
 #define THIS_MODULE ((struct module *)0)
 #endif
 
-#ifdef CONFIG_MODULES
-
 #define NS_SEPARATOR "."
 
-#if defined(__KERNEL__) && !defined(__GENKSYMS__)
 #ifdef CONFIG_MODVERSIONS
 /* Mark the CRC weak since genksyms apparently decides not to
  * generate a checksums for some symbols */
@@ -98,6 +95,13 @@ struct kernel_symbol {
 };
 #endif
 
+#ifdef __GENKSYMS__
+
+#define ___EXPORT_SYMBOL(sym, sec)	  __GENKSYMS_EXPORT_SYMBOL(sym)
+#define ___EXPORT_SYMBOL_NS(sym, sec, ns) __GENKSYMS_EXPORT_SYMBOL(sym)
+
+#else
+
 #define ___export_symbol_common(sym, sec)				\
 	extern typeof(sym) sym;						\
 	__CRC_SYMBOL(sym, sec);						\
@@ -117,7 +121,9 @@ struct kernel_symbol {
 	___export_symbol_common(sym, sec);				\
 	__KSYMTAB_ENTRY(sym, sec)
 
-#if defined(__DISABLE_EXPORTS)
+#endif
+
+#if !defined(CONFIG_MODULES) || defined(__DISABLE_EXPORTS)
 
 /*
  * Allow symbol exports to be disabled completely so that C code may
@@ -162,9 +168,11 @@ struct kernel_symbol {
 #define __cond_export_ns_sym_0(sym, sec, ns) /* nothing */
 
 #else
+
 #define __EXPORT_SYMBOL_NS ___EXPORT_SYMBOL_NS
-#define __EXPORT_SYMBOL ___EXPORT_SYMBOL
-#endif
+#define __EXPORT_SYMBOL    ___EXPORT_SYMBOL
+
+#endif /* CONFIG_MODULES */
 
 #ifdef DEFAULT_SYMBOL_NAMESPACE
 #undef __EXPORT_SYMBOL
@@ -172,48 +180,19 @@ struct kernel_symbol {
 	__EXPORT_SYMBOL_NS(sym, sec, DEFAULT_SYMBOL_NAMESPACE)
 #endif
 
-#define EXPORT_SYMBOL(sym) __EXPORT_SYMBOL(sym, "")
-#define EXPORT_SYMBOL_GPL(sym) __EXPORT_SYMBOL(sym, "_gpl")
-#define EXPORT_SYMBOL_GPL_FUTURE(sym) __EXPORT_SYMBOL(sym, "_gpl_future")
-#define EXPORT_SYMBOL_NS(sym, ns) __EXPORT_SYMBOL_NS(sym, "", ns)
-#define EXPORT_SYMBOL_NS_GPL(sym, ns) __EXPORT_SYMBOL_NS(sym, "_gpl", ns)
-
+#define EXPORT_SYMBOL(sym)		__EXPORT_SYMBOL(sym, "")
+#define EXPORT_SYMBOL_GPL(sym)		__EXPORT_SYMBOL(sym, "_gpl")
+#define EXPORT_SYMBOL_GPL_FUTURE(sym)	__EXPORT_SYMBOL(sym, "_gpl_future")
+#define EXPORT_SYMBOL_NS(sym, ns)	__EXPORT_SYMBOL_NS(sym, "", ns)
+#define EXPORT_SYMBOL_NS_GPL(sym, ns)	__EXPORT_SYMBOL_NS(sym, "_gpl", ns)
 #ifdef CONFIG_UNUSED_SYMBOLS
-#define EXPORT_UNUSED_SYMBOL(sym) __EXPORT_SYMBOL(sym, "_unused")
-#define EXPORT_UNUSED_SYMBOL_GPL(sym) __EXPORT_SYMBOL(sym, "_unused_gpl")
+#define EXPORT_UNUSED_SYMBOL(sym)	__EXPORT_SYMBOL(sym, "_unused")
+#define EXPORT_UNUSED_SYMBOL_GPL(sym)	__EXPORT_SYMBOL(sym, "_unused_gpl")
 #else
 #define EXPORT_UNUSED_SYMBOL(sym)
 #define EXPORT_UNUSED_SYMBOL_GPL(sym)
 #endif
 
-#endif	/* __KERNEL__ && !__GENKSYMS__ */
-
-#if defined(__GENKSYMS__)
-/*
- * When we're running genksyms, ignore the namespace and make the _NS
- * variants look like the normal ones. There are two reasons for this:
- * 1) In the normal definition of EXPORT_SYMBOL_NS, the 'ns' macro
- *    argument is itself not expanded because it's always tokenized or
- *    concatenated; but when running genksyms, a blank definition of the
- *    macro does allow the argument to be expanded; if a namespace
- *    happens to collide with a #define, this can cause issues.
- * 2) There's no need to modify genksyms to deal with the _NS variants
- */
-#define EXPORT_SYMBOL_NS(sym, ns) EXPORT_SYMBOL(sym)
-#define EXPORT_SYMBOL_NS_GPL(sym, ns) EXPORT_SYMBOL_GPL(sym)
-#endif
-
-#else /* !CONFIG_MODULES... */
-
-#define EXPORT_SYMBOL(sym)
-#define EXPORT_SYMBOL_NS(sym, ns)
-#define EXPORT_SYMBOL_NS_GPL(sym, ns)
-#define EXPORT_SYMBOL_GPL(sym)
-#define EXPORT_SYMBOL_GPL_FUTURE(sym)
-#define EXPORT_UNUSED_SYMBOL(sym)
-#define EXPORT_UNUSED_SYMBOL_GPL(sym)
-
-#endif /* CONFIG_MODULES */
 #endif /* !__ASSEMBLY__ */
 
 #endif /* _LINUX_EXPORT_H */
