@@ -143,6 +143,8 @@ struct elf_info {
 	Elf_Section  export_gpl_sec;
 	Elf_Section  export_unused_gpl_sec;
 	Elf_Section  export_gpl_future_sec;
+	char	     *ksymtab_strings;
+	unsigned int ksymtab_len;
 	char         *strtab;
 	char	     *modinfo;
 	unsigned int modinfo_len;
